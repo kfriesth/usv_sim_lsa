@@ -25,7 +25,7 @@
              body control will not activate as we expect direct thruster control -->
         <node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen" respawn="true"/>
 
-        <node name="control_vel" pkg="usv_base_ctrl" type="boat_rudder_vel_ctrl.py"/>
+        <node name="control_vel" pkg="usv_base_ctrl" type="rudder_control_heading_tmp.py"/>
 
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
             <param name="publish_frequency" type="double" value="30.0" />

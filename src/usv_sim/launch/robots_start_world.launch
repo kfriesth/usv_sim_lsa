@@ -7,6 +7,6 @@
     <!-- spawn robot -->
     <include file="$(find usv_sim)/launch/models/diff_robots.launch"  unless="$(arg parse)" />
     <!-- start rvizii -->
-    <include file="$(find usv_sim_rviz)/launch/navigation_rviz.launch"  unless="$(arg parse)" />
+    <!--<include file="$(find usv_sim_rviz)/launch/navigation_rviz.launch"  unless="$(arg parse)" />-->
 
 </launch>
