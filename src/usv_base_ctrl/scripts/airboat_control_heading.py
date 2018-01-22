@@ -12,7 +12,7 @@ from geometry_msgs.msg import Quaternion
 initial_pose = Odometry()
 target_pose = Odometry()
 target_distance = 0
-actuator_vel = 15
+actuator_vel = 0 
 Ianterior = 0
 rate_value = 10
 Kp = 10
@@ -32,9 +32,9 @@ def thruster_ctrl_msg():
     msg = JointState()
     msg.header = Header()
     msg.name = ['fwd']
-    msg.position = [actuator_vel]
+    msg.position = []
     msg.velocity = []
-    msg.effort = []
+    msg.effort = [actuator_vel]
     return msg
 
 def angle_saturation(sensor):
@@ -47,8 +47,8 @@ def angle_saturation(sensor):
 def talker_ctrl():
     global rate_value
     # publishes to thruster and rudder topics
-    pub_motor = rospy.Publisher('thruster_command', JointState, queue_size=10)
     pub_rudder = rospy.Publisher('joint_setpoint', JointState, queue_size=10)
+    pub_motor = rospy.Publisher('thruster_command', JointState, queue_size=10)
     rospy.init_node('usv_simple_ctrl', anonymous=True)
     rate = rospy.Rate(rate_value) # 10h
     
@@ -118,23 +118,31 @@ def rudder_ctrl():
     if target_distance < 5 and x2 != 0 and y2 != 0:
         actuator_vel = 0
     else:
-        actuator_vel = 15
+        actuator_vel = 15 
 
-    log_msg = "sp: {0}; erro: {1}; x_atual: {2}; y_atual: {3}; x_destino: {4}; y_destino: {5}; distancia_destino: {6}" .format(sp_angle, err, initial_pose.pose.pose.position.x, initial_pose.pose.pose.position.y, target_pose.pose.pose.position.x, target_pose.pose.pose.position.y, target_distance)
-
-    rospy.loginfo(log_msg)
 
     rudder_angle = 90 * (-err/180)
+
+    if rudder_angle < -90:
+        rudder_angle = -90
+
+    if rudder_angle > 90:
+        rudder_angle = 90
+
+
+    log_msg = "sp: {0}; erro: {1}; x_atual: {2}; y_atual: {3}; x_destino: {4}; y_destino: {5}; distancia_destino: {6}; rudder_command: {7}" .format(sp_angle, err, initial_pose.pose.pose.position.x, initial_pose.pose.pose.position.y, target_pose.pose.pose.position.x, target_pose.pose.pose.position.y, target_distance, rudder_angle)
+
+    rospy.loginfo(log_msg)
 
     return rudder_angle
 
 def rudder_ctrl_msg():
     msg = JointState()
     msg.header = Header()
-    msg.name = ['rudder_joint']
+    msg.name = ['fwd_joint']
     msg.position = [math.radians(rudder_ctrl())]
-    msg.velocity = []
-    msg.effort = []
+    msg.velocity = [0]
+    msg.effort = [0]
     return msg
 
 if __name__ == '__main__':

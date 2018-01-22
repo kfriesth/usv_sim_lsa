@@ -20,8 +20,7 @@
     <arg name="init_pose_y" value="-1" />
     <arg name="init_pose_a" value="0" />
     <arg name="robot_name" value="diff2" />
-</include>
--->
+</include>-->
 
 <!--<group ns="sailboat1">
     <param name="tf_prefix" value="sailboat1_tf" />
