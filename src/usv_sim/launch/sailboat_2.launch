@@ -11,7 +11,7 @@
 
 	<!-- parse launch file -->
 	<group if="$(arg parse)">
-		<node name="scene_to_spawner" pkg="freefloating_gazebo" type="uwsim_scene_to_gazebo_spawner.py" args="$(find usv_sim)/launch/sailboat.launch" output="screen" required="true"/>
+		<node name="scene_to_spawner" pkg="freefloating_gazebo" type="uwsim_scene_to_gazebo_spawner.py" args="$(find usv_sim)/launch/sailboat_2.launch" output="screen" required="true"/>
 	</group>
         <!-- spawn uwsim -->
 	<group unless="$(arg parse)">

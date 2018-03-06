@@ -12,6 +12,8 @@
 
 using namespace gazebo;
 
+int count(0);
+
 
   GZ_REGISTER_MODEL_PLUGIN(Rudderplugin)
 
@@ -119,7 +121,7 @@ void Rudderplugin::OnUpdate()
 	
   // get linear velocity at cp in inertial frame
   //math::Vector3 vel = math::Vector3(1,0,0)- this->link->GetWorldLinearVel(this->cp);
-  math::Vector3 vel = this->link->GetWorldLinearVel(this->cp)- waterCurrent;
+  math::Vector3 vel = this->link->GetWorldLinearVel(this->cp) - waterCurrent;
   // math::Vector3 vel = waterCurrent - this->link->GetWorldLinearVel(this->cp);
 
 //  math::Vector3 vel = this->link->GetWorldLinearVel(this->cp);
@@ -210,7 +212,7 @@ void Rudderplugin::OnUpdate()
 //std::cerr<<"\n alpha: "<<alpha<<" alphaStall: "<<alphaStall;
   // compute cl at cp, check for stall, correct for sweep
   double cl;
-  cl = 8 * sin(2*this->alpha);
+  cl = 5 * sin(2*this->alpha);
   // compute lift force at cp
   math::Vector3 lift = cl * q * this->area * liftDirection;
 
@@ -271,7 +273,21 @@ void Rudderplugin::OnUpdate()
   //     (vel.GetLength() > 50.0 &&
   //      vel.GetLength() < 50.0))
   //force.z = ;
-  if (0){
+  ::count++;
+  if (::count >= 200 && 1){
+    std::cerr << "Link: [" << this->link->GetName() << "  ";
+    //std::cerr << "alpha: " << this->alpha*180/3.1415 << "\n";
+    //std::cerr << "waterCurrent: " << waterCurrent << "\n";
+    //std::cerr << "cl: " << cl << "\n";
+    std::cerr << "lift: " << lift << " ";
+    std::cerr << "cl: " << cl << " ";
+    std::cerr << "drag: " << drag << " cd: "
+    << cd << "\n";
+    //std::cerr << "force: " << force << "\n";
+    ::count = 0;
+  }
+
+  if (::count >= 200 && 0){
     std::cerr << "Link: [" << this->link->GetName() << "\n";
     std::cerr << "alpha: " << this->alpha*180/3.1415 << "\n";
     std::cerr << "waterCurrent: " << waterCurrent << "\n";
@@ -280,9 +296,9 @@ void Rudderplugin::OnUpdate()
     std::cerr << "cd: " << cd << "\n";
     std::cerr << "drag: " << drag << " cd: "
     << cd << "\n";
-    std::cerr << "force: " << force << "\n\n";
+    std::cerr << "force: " << force << "\n";
+    ::count = 0;
   }
-
   if (0)
   {
     std::cerr << "=============================\n";

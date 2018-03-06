@@ -15,6 +15,8 @@ using namespace gazebo;
 
 GZ_REGISTER_MODEL_PLUGIN(SailPlugin)
 
+int count(0);
+
 /////////////////////////////////////////////////
 SailPlugin::SailPlugin() : cla(1.0), cda(0.01), cma(0.01), rho(1.2041)
 {
@@ -22,7 +24,7 @@ std::cerr << "-----------------------------------";
 ROS_INFO("------------------------------SailPlugin OBJECT CREATED!!!!");
   this->cp = math::Vector3(0, 0, 0);
   this->forward = math::Vector3(1, 0, 0);
-  this->upward = math::Vector3(0, 0, 1);
+  this->upward = math::Vector3(0, 1, 0);
   this->area = 1.0;
   this->alpha0 = 0.0;
 
@@ -206,7 +208,8 @@ void SailPlugin::OnUpdate()
 
   double cl;
 
-  cl = 1.5*sin(2*this->alpha);
+  //cl = 1.1*sin(2*this->alpha);
+  cl = 8*sin(2*this->alpha);
   // compute lift force at cp
   math::Vector3 lift = cl * q * this->area * liftDirection;
 
@@ -215,7 +218,8 @@ void SailPlugin::OnUpdate()
   // make sure drag is positive
   //cd = fabs(cd);
 
-  cd = 0.5*(1-cos(2*this->alpha));
+  cd = 2*(1-cos(2*this->alpha));
+  //cd = 0.7*(1-cos(2*this->alpha));
   // drag at cp
   math::Vector3 drag = cd * q * this->area * dragDirection;
 
@@ -238,16 +242,30 @@ void SailPlugin::OnUpdate()
 
   math::Vector3 torque = moment;
 
-  if (0) {
-    std::cerr << "Link: [" << this->link->GetName() << "\n";
-    std::cerr << "alpha: " << this->alpha*180/3.1415 << "\n";
-    std::cerr << "wind: " << wind << "\n";
-    std::cerr << "cl: " << cl << "\n";
-    std::cerr << "lift: " << lift << "\n";
-    std::cerr << "cd: " << cd << "\n";
+  ::count++;
+  if (::count >= 200 && 0) {
+    std::cerr << "Link: [" << this->link->GetName() << "  ";
+    //std::cerr << "alpha: " << this->alpha*180/3.1415 << "  ";
+    //std::cerr << "wind: " << wind << "  ";
+    //std::cerr << "cl: " << cl << "  ";
+    std::cerr << "lift: " << lift << "  ";
+    std::cerr << "cl: " << cl << "  ";
     std::cerr << "drag: " << drag << " cd: "
     << cd << "\n";
-    std::cerr << "force: " << force << "\n\n";
+    //std::cerr << "force: " << force << "\n";
+    ::count = 0;
+  }
+  if (::count >= 200 && 0) {
+    std::cerr << "Link: [" << this->link->GetName() << "  ";
+    std::cerr << "alpha: " << this->alpha*180/3.1415 << "  ";
+    std::cerr << "wind: " << wind << "  ";
+    std::cerr << "cl: " << cl << "  ";
+    std::cerr << "lift: " << lift << "  ";
+    std::cerr << "cd: " << cd << "  ";
+    std::cerr << "drag: " << drag << " cd: "
+    << cd << "  ";
+    std::cerr << "force: " << force << "\n";
+    ::count = 0;
   }
   if (0)
   {
