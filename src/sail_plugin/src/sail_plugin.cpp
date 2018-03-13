@@ -144,8 +144,11 @@ void SailPlugin::OnUpdate()
 {
 //  this->joint->SetLowerLimit(0, gazebo::math::Angle(-this->angle));
 //  this->joint->SetUpperLimit(0, gazebo::math::Angle(this->angle));
+
+  this->joint->SetHighStop(0, gazebo::math::Angle(this->angle));
   this->joint->SetLowStop(0, gazebo::math::Angle(-this->angle));
   this->joint->SetHighStop(0, gazebo::math::Angle(this->angle));
+
   //math::Vector3 vel = math::Vector3(1,0,0)- this->link->GetWorldLinearVel(this->cp);
   //math::Vector3 vel = this->link->GetWorldLinearVel(this->cp) - wind;
   math::Vector3 aw = wind - this->link->GetWorldLinearVel(this->cp); //wind = v_tw
@@ -171,7 +174,7 @@ void SailPlugin::OnUpdate()
   math::Vector3 dragDirection = velInLDPlane;
   dragDirection.Normalize();
 
-  // get direction of lift
+ // get direction of lift
  // math::Vector3 liftDirection = ldNormal.Cross(velInLDPlane);
   math::Vector3 liftDirection = -ldNormal.Cross(velInLDPlane);
   liftDirection.Normalize();
@@ -196,11 +199,11 @@ void SailPlugin::OnUpdate()
     this->alpha = -acos(cosAlpha);
   
   // normalize to within +/-180 deg
- // while (fabs(this->alpha) > M_PI)
- //   this->alpha = this->alpha > 0 ? this->alpha - 2*M_PI
+  // while (fabs(this->alpha) > M_PI)
+  //   this->alpha = this->alpha > 0 ? this->alpha - 2*M_PI
   //                                : this->alpha + 2*M_PI;
   
- // this->alpha += M_PI;
+  // this->alpha += M_PI;
 
   // compute dynamic pressure
   double speedInLDPlane = velInLDPlane.GetLength();
