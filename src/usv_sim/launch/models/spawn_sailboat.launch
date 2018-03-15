@@ -5,6 +5,7 @@
         <arg name="parse" default="false"/>    
     	<!-- spawn in Gazebo with GUI -->
 	<group unless="$(arg parse)" ns="sailboat"  >
+        	<node name="patrol_pid" pkg="usv_navigation" type="patrol_pid.py"/>
 		<param name="robot_description" command="$(find xacro)/xacro --inorder $(find usv_sim)/xacro/sailboat.xacro"/>
 		<node name="spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model sailboat -param robot_description -x 0 -y 0 -z 0 -R 0 -P 0 -Y 0"/>
 
@@ -14,7 +15,7 @@
 		<!-- Launch low-level PID control for arm 
 		     body control will not activate as we expect direct thruster control -->
 		<node name="pid_control" pkg="freefloating_gazebo" type="pid_control" output="screen" respawn="true"/>
-        <!--	<node name="control_vel" pkg="usv_base_ctrl" type="boat_diff_vel_ctrl.py"  unless="$(arg gui)"/> -->
+        	<node name="heading_control" pkg="usv_base_ctrl" type="sailboat_control_heading.py"/>
 		<node name="odom_base_tf" pkg="usv_tf" type="world_tf_broadcaster.py"/> 
 		<!-- <node name="base_laser_tf" pkg="usv_tf" type="laser_tf_broadcaster"/> -->
 		<node pkg="tf" type="static_transform_publisher" name="laser_base_tf" args="0.5 0 0.2 0 0 0 1 base_link boat_diff/base_laser 10" />

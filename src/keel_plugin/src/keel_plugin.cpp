@@ -212,7 +212,7 @@ void Rudderplugin::OnUpdate()
 //std::cerr<<"\n alpha: "<<alpha<<" alphaStall: "<<alphaStall;
   // compute cl at cp, check for stall, correct for sweep
   double cl;
-  cl = 5 * sin(2*this->alpha);
+  cl = 8 * sin(2*this->alpha);
   // compute lift force at cp
   math::Vector3 lift = cl * q * this->area * liftDirection;
 
@@ -221,7 +221,7 @@ void Rudderplugin::OnUpdate()
   // make sure drag is positive
   //cd = fabs(cd);
 
-  cd = 2 * (1-cos(2*this->alpha));
+  cd = 4 * (1-cos(2*this->alpha));
   // drag at cp
   math::Vector3 drag = cd * q * this->area * dragDirection;
 
@@ -274,7 +274,7 @@ void Rudderplugin::OnUpdate()
   //      vel.GetLength() < 50.0))
   //force.z = ;
   ::count++;
-  if (::count >= 200 && 1){
+  if (::count >= 200 && 0){
     std::cerr << "Link: [" << this->link->GetName() << "  ";
     //std::cerr << "alpha: " << this->alpha*180/3.1415 << "\n";
     //std::cerr << "waterCurrent: " << waterCurrent << "\n";
