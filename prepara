@@ -1,4 +1,4 @@
 catkin_make_isolated --install --pkg sail_plugin usv_sim keel_plugin usv_navigation usv_base_ctrl
 source install_isolated/setup.bash
 roslaunch usv_sim sailboat_2.launch parse:=true
-roslaunch usv_sim sailboat_2.launch gui:=false 
+roslaunch usv_sim sailboat_2.launch gui:=false
