@@ -135,8 +135,10 @@ void SailPlugin::Init()
 {
   this->updateConnection = event::Events::ConnectWorldUpdateBegin(
           boost::bind(&SailPlugin::OnUpdate, this));
-  std::string topic = "/" + this->model->GetName() + "/angleLimits";
-  this->angleLimits_subscriber = rosnode.subscribe(topic, 1, &SailPlugin::ropeSimulator, this); 
+
+  // rope behavior on sail (on hold)
+  //std::string topic = "/" + this->model->GetName() + "/angleLimits";
+  //this->angleLimits_subscriber = rosnode.subscribe(topic, 1, &SailPlugin::ropeSimulator, this); 
 }
 
 /////////////////////////////////////////////////
@@ -145,9 +147,10 @@ void SailPlugin::OnUpdate()
 //  this->joint->SetLowerLimit(0, gazebo::math::Angle(-this->angle));
 //  this->joint->SetUpperLimit(0, gazebo::math::Angle(this->angle));
 
-  this->joint->SetHighStop(0, gazebo::math::Angle(this->angle));
-  this->joint->SetLowStop(0, gazebo::math::Angle(-this->angle));
-  this->joint->SetHighStop(0, gazebo::math::Angle(this->angle));
+    // rope behavior on sail (on hold)
+//  this->joint->SetHighStop(0, gazebo::math::Angle(this->angle));
+//  this->joint->SetLowStop(0, gazebo::math::Angle(-this->angle));
+//  this->joint->SetHighStop(0, gazebo::math::Angle(this->angle));
 
   //math::Vector3 vel = math::Vector3(1,0,0)- this->link->GetWorldLinearVel(this->cp);
   //math::Vector3 vel = this->link->GetWorldLinearVel(this->cp) - wind;

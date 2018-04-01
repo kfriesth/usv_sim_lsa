@@ -128,12 +128,13 @@ namespace gazebo
     /// \brief SDF for this plugin;
     protected: sdf::ElementPtr sdf;
     protected: math::Vector3 wind;
-    protected: float angle;
-    protected: ros::NodeHandle rosnode;
-    protected: ros::Subscriber angleLimits_subscriber;
+    // rope simulation (on hold)
+//    protected: float angle;
+//    protected: ros::NodeHandle rosnode;
+//    protected: ros::Subscriber angleLimits_subscriber;
 
-    public: void ropeSimulator(const std_msgs::Float32::ConstPtr& _angle){
-        this->angle = _angle->data;
-    }
+//    public: void ropeSimulator(const std_msgs::Float32::ConstPtr& _angle){
+//        this->angle = _angle->data;
+//    }
   };
 }
