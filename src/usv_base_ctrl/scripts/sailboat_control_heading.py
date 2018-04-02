@@ -121,8 +121,8 @@ def sail_ctrl():
     #rospy.loginfo("valor de (sail_max - sail_min) * (wind_dir/(math.pi/2)) = %f", (sail_max - sail_min) * (wind_dir/(math.pi/2)))
     #rospy.loginfo("valor de sail_min = %f", sail_min)
     sail_angle = sail_min + (sail_max - sail_min) * (wind_dir/180)
-    if sail_angle < 0:
-        sail_angle = -sail_angle
+    #if sail_angle < 0:
+    #    sail_angle = -sail_angle
     rospy.loginfo("valor de result = %f", sail_angle)
     return sail_angle
 
