@@ -21,7 +21,7 @@ Kp = 10
 Ki = 0 
 result = Float64()
 result.data = 0
-f_distance = 4
+f_distance = 1 
 sail_min = 0 
 sail_max = math.pi/2
 curent_heading = 0
@@ -70,7 +70,7 @@ def talker_ctrl():
     rospy.init_node('usv_simple_ctrl', anonymous=True)
     rate = rospy.Rate(rate_value) # 10h
     # publishes to thruster and rudder topics
-    pub_sail = rospy.Publisher('angleLimits', Float64, queue_size=10)
+    #pub_sail = rospy.Publisher('angleLimits', Float64, queue_size=10)
     pub_rudder = rospy.Publisher('joint_setpoint', JointState, queue_size=10)
     pub_result = rospy.Publisher('move_usv/result', Float64, queue_size=10)
     
@@ -81,7 +81,7 @@ def talker_ctrl():
     while not rospy.is_shutdown():
         try:
             pub_rudder.publish(rudder_ctrl_msg())
-            pub_sail.publish(sail_ctrl())
+            #pub_sail.publish(sail_ctrl())
             pub_result.publish(verify_result())
             rate.sleep()
         except rospy.ROSInterruptException:
@@ -120,7 +120,8 @@ def sail_ctrl():
     #rospy.loginfo("valor de sail_max - sail_min = %f", sail_max - sail_min)
     #rospy.loginfo("valor de (sail_max - sail_min) * (wind_dir/(math.pi/2)) = %f", (sail_max - sail_min) * (wind_dir/(math.pi/2)))
     #rospy.loginfo("valor de sail_min = %f", sail_min)
-    sail_angle = sail_min + (sail_max - sail_min) * (wind_dir/180)
+    #sail_angle = sail_min + (sail_max - sail_min) * (wind_dir/180)
+    sail_angle = math.radians(wind_dir)/2;
     #if sail_angle < 0:
     #    sail_angle = -sail_angle
     rospy.loginfo("valor de result = %f", sail_angle)
@@ -194,8 +195,8 @@ def rudder_ctrl():
 def rudder_ctrl_msg():
     msg = JointState()
     msg.header = Header()
-    msg.name = ['rudder_joint']
-    msg.position = [rudder_ctrl()]
+    msg.name = ['rudder_joint', 'sail_joint']
+    msg.position = [rudder_ctrl(), sail_ctrl()]
     msg.velocity = []
     msg.effort = []
     return msg

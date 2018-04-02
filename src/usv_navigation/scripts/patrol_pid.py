@@ -19,8 +19,8 @@ waypoints = [
 ]
 result = Float64()
 result.data = 0
-x_offset = 240
-y_offset = 95
+x_offset = 0 
+y_offset = 0
 
 def goal_pose(pose):
     goal_pose = Odometry()
