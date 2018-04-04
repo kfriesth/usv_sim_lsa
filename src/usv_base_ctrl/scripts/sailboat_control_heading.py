@@ -21,6 +21,10 @@ Kp = 10
 Ki = 0 
 result = Float64()
 result.data = 0
+windDir= Float64()
+windDir.data = 1.5 
+currentHeading= Float64()
+currentHeading.data = 0
 f_distance = 1 
 sail_min = 0 
 sail_max = math.pi/2
@@ -28,7 +32,6 @@ curent_heading = 0
 rudder_min = -math.pi/3
 rudder_max = math.pi/3
 rudder_med = (rudder_min + rudder_max)/2
-
 
 def get_pose(initial_pose_tmp):
     global initial_pose 
@@ -67,12 +70,17 @@ def angle_saturation(sensor):
 
 def talker_ctrl():
     global rate_value
+    global currentHeading
+    global windDir 
     rospy.init_node('usv_simple_ctrl', anonymous=True)
     rate = rospy.Rate(rate_value) # 10h
     # publishes to thruster and rudder topics
     #pub_sail = rospy.Publisher('angleLimits', Float64, queue_size=10)
     pub_rudder = rospy.Publisher('joint_setpoint', JointState, queue_size=10)
     pub_result = rospy.Publisher('move_usv/result', Float64, queue_size=10)
+    pub_heading= rospy.Publisher('currentHeading', Float64, queue_size=10)
+    pub_windDir= rospy.Publisher('windDirection', Float64, queue_size=10)
+
     
     # subscribe to state and targer point topics
     rospy.Subscriber("state", Odometry, get_pose)  # get usv position (add 'gps' position latter)
@@ -83,6 +91,8 @@ def talker_ctrl():
             pub_rudder.publish(rudder_ctrl_msg())
             #pub_sail.publish(sail_ctrl())
             pub_result.publish(verify_result())
+            pub_heading.publish(currentHeading)
+            pub_windDir.publish(windDir)
             rate.sleep()
         except rospy.ROSInterruptException:
 	    rospy.logerr("ROS Interrupt Exception! Just ignore the exception!")
@@ -105,6 +115,7 @@ def I(erro):
 
 def sail_ctrl():
     global curent_heading
+    global windDir
     # receber posicaoo do vento (no ref do veleiro)
     x = rospy.get_param('/uwsim/wind/x')
     y = rospy.get_param('/uwsim/wind/y')
@@ -113,6 +124,7 @@ def sail_ctrl():
     rospy.loginfo("valor de current_heading = %f", math.degrees(curent_heading))
     wind_dir = global_dir - curent_heading
     wind_dir = angle_saturation(math.degrees(wind_dir)+180)
+    windDir.data = wind_dir
 
     rospy.loginfo("valor de wind_dir = %f", wind_dir)
     #rospy.loginfo("valor de pi/2 = %f", math.pi/2)
@@ -138,6 +150,7 @@ def rudder_ctrl():
     global Ianterior
     global rate_value
     global curent_heading
+    global curentHeading
 
     x1 = initial_pose.pose.pose.position.x
     y1 = initial_pose.pose.pose.position.y
@@ -164,6 +177,7 @@ def rudder_ctrl():
     target_angle = angle_saturation(target_angle)
 
     curent_heading = math.radians(target_angle)
+    currentHeading.data = current_heading
     
     err = sp_angle - target_angle
     err = angle_saturation(err)
