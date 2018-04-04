@@ -21,23 +21,29 @@ result = Float64()
 result.data = 0
 x_offset = 0 
 y_offset = 5 
+tackingStatus = 0
 
 def goal_pose(pose):
-    goal_pose = Odometry()
-    goal_pose.header.stamp = rospy.Time.now()
-    goal_pose.header.frame_id = 'world'
-    goal_pose.pose.pose.position = Point(pose[0][0]+x_offset, pose[0][1]+y_offset, 0.)
-    return goal_pose
+    goalPose = Odometry()
+    goalPose.header.stamp = rospy.Time.now()
+    goalPose.header.frame_id = 'world'
+    goalPose.pose.pose.position = Point(pose[0][0]+x_offset, pose[0][1]+y_offset, 0.)
+    return goalPose
 
 def get_result(result_aux):
     global result
     result.data = result_aux.data
+
+def get_tackingStatus(tackingStatus_temp):
+    global tackinStatus
+    tackingStatus = tackingStatus_temp
 
 if __name__ == '__main__':
     pub = rospy.Publisher('move_usv/goal', Odometry, queue_size=10)
     rospy.init_node('patrol')
     rate = rospy.Rate(1) # 10h
     rospy.Subscriber("move_usv/result", Float64, get_result)
+    #rospy.Subscriber("move_usv/isTacking", Integer, get_tackingStatus)
 
     while True:
         for pose in waypoints:
@@ -45,5 +51,8 @@ if __name__ == '__main__':
             pub.publish(goal)
             rate.sleep()
             while result.data == 0.0:
+                while tackingStatus:
+                    rate.sleep()
                 pub.publish(goal)
                 rate.sleep()
+        #dar um print aqui
